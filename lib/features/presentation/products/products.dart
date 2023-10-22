@@ -238,7 +238,8 @@ class _ProductsView extends StatelessWidget {
                                 onTap: () {
                                   context
                                       .read<ProductsViewCubit>()
-                                      .changeFilterListNumber(index);
+                                      .changeFilterListNumber(
+                                          state.filterList[index].id);
                                 },
                                 child: Align(
                                   alignment: Alignment.center,
@@ -253,7 +254,7 @@ class _ProductsView extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 20, vertical: 8),
                                       child: Text(
-                                        state.filterList[index],
+                                        state.filterList[index].name,
                                         style: TextStyle(
                                             color: (state.filterListNumber ==
                                                     index)
@@ -380,7 +381,6 @@ class _ProductsView extends StatelessWidget {
                                         style: TextStyle(
                                             fontSize: 14.0,
                                             color: Colors.grey[700]),
-                                        // 'data sdfdsf dsfdsf dsfdsf defsf dsfdsfdsf grerg',
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -413,6 +413,14 @@ class _ProductsView extends StatelessWidget {
                         }),
                       ),
                     ),
+
+                    (state.moreButtonClicked)
+                        ? ProductsListSkeleton()
+                        : const SliverToBoxAdapter(
+                            child: SizedBox(
+                              height: 10.0,
+                            ),
+                          ),
 
                     /// more products
                     SliverToBoxAdapter(

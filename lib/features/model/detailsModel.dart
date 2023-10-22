@@ -7,6 +7,7 @@ class DetailsModel {
   List<CategoryConfig> allCategories;
   int noOfProducts;
   int paginationLimit;
+  int lastCategorySearchId;
   String userId;
 
   DetailsModel({
@@ -15,6 +16,7 @@ class DetailsModel {
     this.userId = '',
     this.noOfProducts = 0,
     this.paginationLimit = 10,
+    this.lastCategorySearchId = 0,
   });
 
   Map<String, dynamic> toMap() {

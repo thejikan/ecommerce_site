@@ -17,7 +17,6 @@ class ProductsSkeletonView extends StatelessWidget {
   }
 }
 
-
 Widget _skeletonStructure() {
   return Scaffold(
     appBar: AppBar(
@@ -84,7 +83,7 @@ Widget _skeletonStructure() {
               SliverToBoxAdapter(
                 child: Padding(
                   padding:
-                  const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
                   child: Skeleton(
                     width: 320,
                     height: 40,
@@ -105,10 +104,14 @@ Widget _skeletonStructure() {
                       viewportFraction: 1.0,
                       onPageChanged: (index, reason) {},
                     ),
-                    items: [1,2,3,4].map((category) {
-                      return  Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                        child: Skeleton(width: 360,height: 160,),
+                    items: [1, 2, 3, 4].map((category) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 4),
+                        child: Skeleton(
+                          width: 360,
+                          height: 160,
+                        ),
                       );
                     }).toList(),
                   ),
@@ -126,8 +129,11 @@ Widget _skeletonStructure() {
                       itemCount: 5,
                       itemBuilder: (context, index) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                          child: Skeleton(width: 100,),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 4),
+                          child: Skeleton(
+                            width: 100,
+                          ),
                         );
                       },
                     ),
@@ -139,17 +145,25 @@ Widget _skeletonStructure() {
               SliverToBoxAdapter(
                 child: Padding(
                   padding:
-                  const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                        child: Skeleton(width: 60,height: 30,),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                        child: Skeleton(
+                          width: 60,
+                          height: 30,
+                        ),
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                        child: Skeleton(width: 60,height: 30,),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                        child: Skeleton(
+                          width: 60,
+                          height: 30,
+                        ),
                       ),
                     ],
                   ),
@@ -157,25 +171,29 @@ Widget _skeletonStructure() {
               ),
 
               /// products
-              SliverPadding(
-                padding: const EdgeInsets.all(16.0),
-                sliver: SliverGrid.count(
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  childAspectRatio: 1 / 1.5,
-                  children: List.generate(10, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-                      child: Skeleton(),
-                    );
-                  }),
-                ),
-              ),
+              ProductsListSkeleton(),
             ],
           ),
         ),
       ],
+    ),
+  );
+}
+
+Widget ProductsListSkeleton() {
+  return SliverPadding(
+    padding: const EdgeInsets.all(16.0),
+    sliver: SliverGrid.count(
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      crossAxisCount: 2,
+      childAspectRatio: 1 / 1.5,
+      children: List.generate(10, (index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+          child: Skeleton(),
+        );
+      }),
     ),
   );
 }

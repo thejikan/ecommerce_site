@@ -8,14 +8,22 @@ part 'products_state.dart';
 class ProductsViewCubit extends Cubit<ProductsViewState> {
   final DetailsService _detailsService;
 
+  Map<int, String> _allCategories = {};
+
   ProductsViewCubit(this._detailsService) : super(const ProductsViewState()) {
     initialState();
   }
 
   void initialState() async {
-    List<ProductConfig> newData = await _detailsService.getProductsWithinLimit();
+    List<ProductConfig> newData =
+        await _detailsService.getProductsWithinLimit();
     List<CategoryConfig> categories = await _detailsService.getAllCategories();
-    List<String> generalFilter = ['All Product','Stopwatch', 'Clothes', 'Cameras', 'Watches'];
+    List<CategoryConfig> generalFilter = [];
+    generalFilter.add(CategoryConfig(name: 'All Products', id: 0, image: ''));
+    for (final category in categories) {
+      _allCategories[category.id] = category.name;
+      generalFilter.add(category);
+    }
 
     emit(state.copyWith(
       productsList: newData,
@@ -25,25 +33,41 @@ class ProductsViewCubit extends Cubit<ProductsViewState> {
     ));
   }
 
-  void changeDotIndicator(){
-    int num = (state.sliderCardNumber+1)%4;
+  void changeDotIndicator() {
+    int num = (state.sliderCardNumber + 1) % 4;
     emit(state.copyWith(
       sliderCardNumber: num,
     ));
   }
 
-  void changeFilterListNumber(int num){
+  void changeFilterListNumber(int num) async {
+    bool flag = true;
+    if (state.filterListNumber != num) {
+      _detailsService.setOffset(0);
+      flag = false;
+    }
+    List<ProductConfig> newData =
+        await _detailsService.filterProductsList({'categoryId': '$num'}, flag);
     emit(state.copyWith(
       filterListNumber: num,
       filterApplied: num > 0,
+      productsList: newData,
+      moreButtonClicked: false,
     ));
   }
 
-  void addMoreProducts() async{
+  void addMoreProducts() async {
     emit(state.copyWith(
       moreButtonClicked: true,
     ));
-    List<ProductConfig> newData = await _detailsService.getProductsWithinLimit();
+    List<ProductConfig> newData = [];
+    if (state.filterApplied) {
+      changeFilterListNumber(state.filterListNumber);
+      return;
+    } else {
+      newData = await _detailsService.getProductsWithinLimit();
+    }
+
     emit(state.copyWith(
       productsList: newData,
       moreButtonClicked: false,

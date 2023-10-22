@@ -4,7 +4,7 @@ class ProductsViewState extends Equatable {
   final bool filterApplied;
   final List<ProductConfig> productsList;
   final List<CategoryConfig> categories;
-  final List<String> filterList;
+  final List<CategoryConfig> filterList;
   final int sliderCardNumber;
   final int filterListNumber;
   final bool isLoading;
@@ -25,7 +25,7 @@ class ProductsViewState extends Equatable {
     bool? filterApplied,
     List<ProductConfig>? productsList,
     List<CategoryConfig>? categories,
-    List<String>? filterList,
+    List<CategoryConfig>? filterList,
     int? sliderCardNumber,
     int? filterListNumber,
     bool? isLoading,

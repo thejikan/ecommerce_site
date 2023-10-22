@@ -13,12 +13,11 @@ class DetailsService {
     _detailsModel = detailsModel ?? DetailsModel.empty();
   }
 
-
   Future<List<ProductConfig>> getAllProductsDetails() async {
     try {
       List<ProductConfig> data = await repository.getAllProducts();
 
-      if(data.isNotEmpty){
+      if (data.isNotEmpty) {
         _detailsModel.productsData = data;
       }
 
@@ -30,8 +29,7 @@ class DetailsService {
 
   Future<ProductConfig> getProductById(int productId) async {
     try {
-      ProductConfig data =
-      await repository.getProductById(productId);
+      ProductConfig data = await repository.getProductById(productId);
 
       return data;
     } catch (e) {
@@ -41,10 +39,11 @@ class DetailsService {
 
   Future<List<ProductConfig>> getProductsWithinLimit() async {
     try {
-      List<ProductConfig> data = await repository.getProductsWithLimit(_detailsModel.noOfProducts, _detailsModel.paginationLimit);
+      List<ProductConfig> data = await repository.getProductsWithLimit(
+          _detailsModel.noOfProducts, _detailsModel.paginationLimit);
 
-      if(data.isNotEmpty){
-        for(var product in data){
+      if (data.isNotEmpty) {
+        for (var product in data) {
           _detailsModel.productsData.add(product);
         }
 
@@ -56,14 +55,13 @@ class DetailsService {
       return [];
       // rethrow;
     }
-
   }
 
   Future<List<CategoryConfig>> getAllCategories() async {
     try {
       List<CategoryConfig> data = await repository.getAllCategories();
 
-      if(data.isNotEmpty){
+      if (data.isNotEmpty) {
         _detailsModel.allCategories = data;
       }
 
@@ -73,15 +71,48 @@ class DetailsService {
     }
   }
 
-  Future<List<ProductConfig>> filterProductsList(Map<String, String> filter) async {
+  Future<List<ProductConfig>> filterProductsList(
+      Map<String, String> filter, bool filterCheck) async {
+    List<ProductConfig> data = [];
     try {
-      List<ProductConfig> data = await repository.filterProductsList('');
+      String filterString = '', res;
+      if (filter['categoryId'] != '0') {
+        Iterable<MapEntry<String, String>> entries = filter.entries;
+        for (final entry in entries) {
+          res = '${entry.key}=${entry.value}';
+          filterString += '$res&';
+        }
+      }
+      if (filterString.isEmpty) {
+        data = await repository.getProductsWithLimit(
+            _detailsModel.noOfProducts, _detailsModel.paginationLimit);
+      } else {
+        filterString +=
+            'offset=${_detailsModel.noOfProducts}&limit=${_detailsModel.paginationLimit}';
+        data = await repository.filterProductsList(filterString);
+      }
 
-      return data;
+      if (filterCheck) {
+        for (var product in data) {
+          _detailsModel.productsData.add(product);
+        }
+      } else {
+        _detailsModel.productsData = data;
+      }
+
+      _detailsModel.noOfProducts += _detailsModel.paginationLimit;
+
+      return _detailsModel.productsData;
     } catch (e) {
       rethrow;
     }
   }
 
+  void setOffset(int offset) {
+    _detailsModel.noOfProducts = offset;
+  }
 
+  void setLimit(int limit) {
+    _detailsModel.paginationLimit = limit;
+  }
 }
